@@ -1,12 +1,10 @@
 <img src="https://storage.googleapis.com/golden-wind/experts-club/capa-github.svg" />
 
-# Testando eventos com react testing library
+# Testando redux com react testing library
 
-Nesse vídeo vamos falar sobre testes de eventos do usuário com React Testing Library e Jest.
+Nesse vídeo vamos falar sobre testes de `Redux` com `React Testing Library` e `Jest`.
 
-Nele nós vamos ver os testes de eventos do usuário utilizando o a API fireEvent e através de eventos dos elementos HTML.
-
-Testaremos inclusive um evento de change com uma estratégia de debounce num elemento de input.
+Nele nós vamos ver os testes de reducers, actions e selectors. E veremos como testar nossos componentes que usam Redux.
 
 ## Expert
 
