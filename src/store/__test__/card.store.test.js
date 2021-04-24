@@ -7,34 +7,41 @@ import cardStore from '../card.store';
 import {cardStateBuilder} from "../../__mocks__/card-state-builder";
 import {cardBuilder} from "../../__mocks__/card-builder";
 
-describe('Card Store', () => {
-    let store;
-    let initialCardsState;
+const setup = (state) => {
+    jest.clearAllMocks();
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+    const defaultState = cardStateBuilder();
+    const initialState = state || defaultState;
 
-        initialCardsState = cardStateBuilder();
-
-        store = createStore(
-            combineReducers(
-                {
-                    card: cardStore.reducer
-                }
-            ),
+    const store = createStore(
+        combineReducers(
             {
-                card: initialCardsState
-            },
-            applyMiddleware(thunk)
-        );
-    });
+                card: cardStore.reducer
+            }
+        ),
+        {
+            card: initialState
+        },
+        applyMiddleware(thunk)
+    );
 
+    return {
+        store,
+        initialState
+    }
+}
+
+describe('Card Store', () => {
     test('should have correct initial state', () => {
-        expect(store.getState()).toEqual({card: cardStateBuilder()});
+        const {store, initialState} = setup();
+
+        expect(store.getState()).toEqual({card: initialState});
     });
 
     test('should dispatch getCards', async () => {
         const card = cardBuilder();
+        const {store, initialState} = setup();
+
         axiosMock.get.mockResolvedValueOnce({
             data: {
                 cards: [card]
@@ -48,7 +55,7 @@ describe('Card Store', () => {
         expect(axiosMock.get).toBeCalledTimes(1);
         expect(axiosMock.get).toBeCalledWith('/cards?page=1&name=&pageSize=27');
         expect(currentState.card).toEqual({
-            ...initialCardsState,
+            ...initialState,
             cards: {[card.id]: card},
             ids: [card.id],
             query: ''
@@ -58,6 +65,7 @@ describe('Card Store', () => {
     test('should dispatch nextCards', async () => {
         const card = cardBuilder({name: 'PokePicles'});
         const query = 'picles';
+        const {store, initialState} = setup();
 
         store.dispatch(cardStore.actions.setQuery({query}));
 
@@ -74,16 +82,17 @@ describe('Card Store', () => {
         expect(axiosMock.get).toBeCalledTimes(1);
         expect(axiosMock.get).toBeCalledWith(`/cards?page=2&name=${query}&pageSize=27`);
         expect(currentState.card).toEqual({
-            ...initialCardsState,
+            ...initialState,
             query,
             page: 2,
-            cards: {...initialCardsState.cards, [card.id]: card},
-            ids: [...initialCardsState.ids, card.id]
+            cards: {...initialState.cards, [card.id]: card},
+            ids: [...initialState.ids, card.id]
         });
     });
 
     test('should dispatch setPage', () => {
         const page = 2020;
+        const {store} = setup();
 
         store.dispatch(cardStore.actions.setPage({page}));
 
@@ -94,6 +103,7 @@ describe('Card Store', () => {
 
     test('should dispatch setQuery', () => {
         const query = 'picles';
+        const {store} = setup();
 
         store.dispatch(cardStore.actions.setQuery({query}));
 
@@ -104,6 +114,7 @@ describe('Card Store', () => {
 
     test('should dispatch setLoading', () => {
         const loading = true;
+        const {store} = setup();
 
         store.dispatch(cardStore.actions.setLoading({loading}));
 
@@ -113,18 +124,20 @@ describe('Card Store', () => {
     });
 
     test('should select cards', () => {
-        const cards = cardStore.selectors.cards({card: initialCardsState});
+        const {initialState} = setup();
+        const cards = cardStore.selectors.cards({card: initialState});
 
         expect(cards).toEqual(
             orderBy(
-                Object.values(initialCardsState.cards),
+                Object.values(initialState.cards),
                 ['name']
             )
         );
     });
 
     test('should select loading', () => {
-        const loading = cardStore.selectors.loading({card: initialCardsState});
+        const {initialState} = setup();
+        const loading = cardStore.selectors.loading({card: initialState});
 
         expect(loading).toBe(false);
     });
