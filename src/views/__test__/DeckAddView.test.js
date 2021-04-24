@@ -1,5 +1,5 @@
 import React from "react";
-import {fireEvent, render, wait} from "@testing-library/react";
+import {fireEvent, render, waitFor} from "@testing-library/react";
 import {Provider} from "react-redux";
 import {MemoryRouter, Route} from "react-router-dom";
 import axiosMock from '../../__mocks__/axios-mock';
@@ -44,8 +44,6 @@ describe('DeckAddView', () => {
 
         const {container, input, btnAdd} = setup();
 
-        await wait(undefined, {timeout: 0});
-
         expect(container).toBeInTheDocument();
         expect(input).toBeInTheDocument();
         expect(btnAdd).toBeInTheDocument();
@@ -58,10 +56,10 @@ describe('DeckAddView', () => {
 
         const {getByAltText} = setup();
 
-        await wait(undefined, {timeout: 0});
-
-        cards.forEach(card => {
-            expect(getByAltText(`${card.id}-${card.name}`)).toBeInTheDocument();
+        await waitFor(() => {
+            cards.forEach(card => {
+                expect(getByAltText(`${card.id}-${card.name}`)).toBeInTheDocument();
+            });
         });
     });
 
@@ -80,9 +78,7 @@ describe('DeckAddView', () => {
 
         const {getByAltText} = setup();
 
-        await wait(undefined, {timeout: 0});
-
-        expect(getByAltText('Empty Result')).toBeInTheDocument();
+        await waitFor(() => expect(getByAltText('Empty Result')).toBeInTheDocument());
     });
 
     test('should search', async () => {
