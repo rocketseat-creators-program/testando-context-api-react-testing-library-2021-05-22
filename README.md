@@ -1,10 +1,10 @@
 <img src="https://storage.googleapis.com/golden-wind/experts-club/capa-github.svg" />
 
-# Testando redux com react testing library
+# Testando context api com react testing library
 
-Nesse vídeo vamos falar sobre testes de `Redux` com `React Testing Library` e `Jest`.
+Nesse vídeo vamos falar sobre testes de contexto.
 
-Nele nós vamos ver os testes de reducers, actions e selectors. E veremos como testar nossos componentes que usam Redux.
+Nele nós vamos testar nosso provider e consequentemente nosso contexto.
 
 ## Expert
 
