@@ -4,7 +4,7 @@
 
 Nesse vídeo vamos falar sobre testes de contexto.
 
-Nele nós vamos testar nosso provider e consequentemente nosso contexto.
+Nele nós vamos testar nosso provider e o componente que utiliza o nosso contexto.
 
 ## Expert
 
